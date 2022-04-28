@@ -1,6 +1,6 @@
 <br />
 
-### ✨ [살다] 프론트엔드 엔지니어 과제 - 신항민
+### ✨ [good_life] 프론트엔드 엔지니어 과제 - 신항민
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 💫  프로젝트 소개
 
-- 잘찾아보세 웹에 접속하여 관광지를 검색한 후 관광지를 모아 놓은 페이지 구현
+- good_life 웹에 접속하여 관광지를 검색한 후 관광지를 모아 놓은 페이지 구현
 
 <br />
 
@@ -21,10 +21,6 @@
 <br />
 
 ### 🛠 기능 시연 
-
-<div align="center">
-    <img width="500px" height="300px" src="https://user-images.githubusercontent.com/89959952/162679382-03cbc451-9e28-44cd-8bac-e477d5081e39.gif"/>
-</div>
 
 <br />
 
@@ -73,9 +69,9 @@ npm i -g json-server
 2. json-server --watch db.json --port 3001
 
 // good_life 디렉토리에서 다음 명령어 실행
-1. npm install
+1. yarn install
 
-2. npm start
+2. yarn start
 ```
 
 <br />
@@ -84,7 +80,7 @@ npm i -g json-server
 
 1. 관광지를 검색할 수 있는 검색창에 관광지를 입력해 주세요.
 
-2. 전체 관광지를 검색하려면 검색창을 클릭 후 enter를 입력하시거나 검색을 눌러주세요.
+2. **전체 관광지를 검색**하려면 **검색창을 클릭 후 enter를 입력하시거나 검색을 눌러**주세요.
 
 3. 검색창에 쉼표(,)를 기준으로 복수개의 키워드 검색이 가능합니다.
 
@@ -168,16 +164,7 @@ npm i -g json-server
 
 <br/>
 
-<div align="center">
-    <img width="500px" height="300px" src="https://user-images.githubusercontent.com/89959952/162816413-edd09e3b-6c58-4028-b7e7-dbc81880f31b.gif"/>
-</div>
-
-<br/>
-
 > 1. 전체적인 컴포넌트 생성 시 width값을 % 로 설정해 가로 사이즈가 줄어들때 자동으로 크기를 가져가도록 설정, 미디어 쿼리를 사용해 특정 컴포넌트 크기 및 색상 노출 여부를 컨트롤 하였고, 모바일 사이즈가 되었을 때 모바일 전용 제공 하였습니다.
-
-- /src/pages/Home.jsx
-- /src/pages/Issue.jsx
 
 <br />
 
@@ -201,10 +188,88 @@ npm i -g json-server
 
 <br />
 
-😀 &nbsp; 어려웠던 점
+🏆 &nbsp; refactoring
 
 1. 쉼표(,)를 기준으로 복수개의 키워드 검색이 가능 코드
 
+<br/>
+
+> 코드의 가독성을 위해 최대한 간결하게 적으려고 했으나 for 문은 두 번 돌리고 if 문을 쓴 후 Set을 통해 중복을 제거할 수밖에 없었다.
 >
+> 그래서 코드를 리팩토링하기로 했다.
+>
+> 1. 일단 Set을 통해 중복제거를 하기보다 중복된 코드는 newData에 들어가지 않는 코드를 작성하려고 했다.
+
+- 변경전
+
+```javascript
+if (newTarget.includes(",")) {
+          const targetArr = newTarget.split(",");
+
+          let newData = [];
+
+          for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < targetArr.length; j++) {
+              if (data[i].관광지명.includes(targetArr[j])) {
+                newData.push(data[i]);
+              }
+            }
+          }
+          // 중복제거
+          newData = [...new Set(newData)];
+
+          ...
+}
+```
 
 <br />
+
+> 2. if (!newData.includes(data[i])) newData.push(data[i]); 추가하여 해결했다.
+>
+> 그러나 아직도 코드가 너무 길다. 좀더 간결하게 하고싶었다.
+
+- 1차 변경
+
+```javascript
+ if (newTarget.includes(",")) {
+          const targetArr = newTarget.split(",");
+
+          let newData = [];
+
+          for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < targetArr.length; j++) {
+              if (data[i].관광지명.includes(targetArr[j])) {
+                if (!newData.includes(data[i])) newData.push(data[i]);
+              }
+            }
+          }
+
+          ...
+}
+```
+
+<br />
+
+> 3. `for 문`은 실행속도가 가장 빠른 `for (array.value of array) {}` 배열 순환 문법으로 고치기로 했다. 그리고 if 문 대신 && 연산자를 사용하여 단축 평가를 하기로 했다.
+>
+> 이전보다 확실히 나아진 거 같다. 그래도 map()과 filter() 함수를 사용하여 바꾸고 싶었으나 계속된 실패로 좀 더 알고리즘을 공부해야겠다.
+
+- 최종 변경
+
+```javascript
+ if (newTarget.includes(",")) {
+          const targetArr = newTarget.split(",");
+
+          let newData = [];
+
+         for (let dataOne of data) {
+            for (let targetOne of targetArr) {
+              dataOne.관광지명.includes(targetOne) &&
+                !newData.includes(dataOne) &&
+                newData.push(dataOne);
+            }
+          }
+
+          ...
+}
+```

@@ -39,26 +39,22 @@ export default handleActions(
   {
     [ALREADY_MODAL]: (state, action) =>
       produce(state, (draft) => {
-        console.log("alreadyModal");
         draft.alreadyRepoModal = !state.alreadyRepoModal;
       }),
 
     [ADD_SEARCH_LIST]: (state, action) =>
       produce(state, (draft) => {
-        console.log("ADD_SEARCH_LIST");
         draft.searchList.isLoading = action.payload.isLoading;
         draft.searchList.list = [...action.payload.data];
       }),
 
     [ADD_REPO]: (state, action) =>
       produce(state, (draft) => {
-        console.log("ADD_REPO");
         draft.repoData = [...state.repoData, action.payload.addData];
       }),
 
     [DELETE_REPO]: (state, action) =>
       produce(state, (draft) => {
-        console.log("DELETE_REPO");
         draft.repoData = action.payload.deletedData;
       }),
   },

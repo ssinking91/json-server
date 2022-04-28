@@ -9,14 +9,15 @@ import Spinner from "../components/Spinner";
 import Modal from "../components/Modal";
 import ToastModal from "../components/ToastModal";
 
-export default function Posts({ isText, CurrentData, isLoading }) {
+export default function Posts({ isText, CurrentData }) {
   const alreadyRepoModal = useSelector(
     (state) => state.Search.alreadyRepoModal
   );
+  const isLoading = useSelector((state) => state.Search.searchList.isLoading);
 
   // Modal
   const [modal, setmodal] = useState(false);
-  const [isModal, setModalIdx] = useState(null);
+  const [isModalIdx, setModalIdx] = useState(null);
 
   // Modal 이벤트
   const modalOpen = useCallback(
@@ -59,7 +60,7 @@ export default function Posts({ isText, CurrentData, isLoading }) {
                       : `👉 ${value.관광지명} 정보 더보기`}
                   </p>
                 </ItemTitleBox>
-                {idx === isModal && (
+                {idx === isModalIdx && (
                   <Modal index={idx} modalOpen={modalOpen} info={value} posts />
                 )}
               </PostContainer>
@@ -80,7 +81,6 @@ export default function Posts({ isText, CurrentData, isLoading }) {
 Posts.propTypes = {
   isText: PropTypes.array,
   CurrentData: PropTypes.array,
-  isLoading: PropTypes.bool,
 };
 
 const SearchList = styled.div`

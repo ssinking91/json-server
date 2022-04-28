@@ -4,18 +4,20 @@ import styled, { css } from "styled-components";
 import PropTypes from "prop-types";
 
 import { addRepo, deleteRepo, alreadyModal } from "../redux/modules/Search";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 
+import { useLocalStorage } from "../hooks/useLocalStorage";
+import { localStorageKey } from "../utilities/localStorageKey";
 export default function Modal({ info, index, modalOpen, posts }) {
   const dispatch = useDispatch();
 
   const searchList = useSelector((state) => state.Search.searchList.list);
 
   // LocalStorage 커스텀 훅
-  const [storage, setLocalStorage] = useLocalStorage("attraction", []);
+  const [storage, setLocalStorage] = useLocalStorage(localStorageKey, []);
 
   // Modal 저장 버튼 클릭시 이벤트
   const handleAddRepo = useCallback(() => {
+    // [{…}, ...]
     const addOneRepo = searchList.filter(
       (value) => value.관광지명 === info.관광지명
     );
@@ -23,7 +25,6 @@ export default function Modal({ info, index, modalOpen, posts }) {
     if (storage.length > 0) {
       const newRepos = storage.map((el) => el.관광지명);
       if (newRepos.includes(info.관광지명)) {
-        console.log("이미있습니다.");
         dispatch(alreadyModal());
       } else {
         dispatch(addRepo(addOneRepo[0]));
@@ -48,8 +49,8 @@ export default function Modal({ info, index, modalOpen, posts }) {
   const removeBox = useCallback(
     (index) => {
       const deleteBox = storage.filter((_, idx) => idx !== index);
-      setLocalStorage(deleteBox);
       dispatch(deleteRepo(deleteBox));
+      setLocalStorage(deleteBox);
     },
     [dispatch, setLocalStorage, storage]
   );

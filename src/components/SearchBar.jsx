@@ -2,7 +2,7 @@ import React, { useRef, useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { addSearchList } from "../redux/modules/Search";
 
@@ -39,6 +39,7 @@ export default function SearchBar() {
   const fetchProdData = useCallback(async () => {
     const url = `http://localhost:3001/records?_sort=관광지명&_order=ASC`;
     dispatch(addSearchList(true, []));
+    setIsLoading(true);
     try {
       const { data, status, statusText } = await axios.get(url);
       if (status >= 400) {
@@ -53,22 +54,18 @@ export default function SearchBar() {
       if (target) newTarget = target.replace(/(\s*)/g, "");
 
       if (newTarget) {
-        console.log(1);
         if (newTarget.includes(",")) {
           const targetArr = newTarget.split(",");
 
           let newData = [];
 
-          for (let i = 0; i < data.length; i++) {
-            for (let j = 0; j < targetArr.length; j++) {
-              if (data[i].관광지명.includes(targetArr[j])) {
-                newData.push(data[i]);
-              }
+          for (let dataOne of data) {
+            for (let targetOne of targetArr) {
+              dataOne.관광지명.includes(targetOne) &&
+                !newData.includes(dataOne) &&
+                newData.push(dataOne);
             }
           }
-          // 중복제거
-          newData = [...new Set(newData)];
-          console.log(newData);
 
           dispatch(addSearchList(false, newData));
           setIsLoading(false);
@@ -80,7 +77,6 @@ export default function SearchBar() {
           setIsLoading(false);
         }
       } else {
-        console.log(2);
         dispatch(addSearchList(false, data));
         setIsLoading(false);
       }

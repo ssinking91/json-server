@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useCallback } from "react";
-
 import { useDispatch, useSelector } from "react-redux";
 import Styled from "styled-components";
 
-import RepoBox from "./RepoBox";
 import { deleteRepo } from "../redux/modules/Search";
+
+import RepoBox from "./RepoBox";
+
 import { useLocalStorage } from "../hooks/useLocalStorage";
+import { localStorageKey } from "../utilities/localStorageKey";
 
 export default function RepoList() {
   const dispatch = useDispatch();
 
   const repoData = useSelector((state) => state.Search.repoData);
+
   // LocalStorage 커스텀 훅
-  const [storage, setLocalStorage] = useLocalStorage("attraction", []);
+  const [storage, setLocalStorage] = useLocalStorage(localStorageKey, []);
 
   useEffect(() => {
     if (storage) {
@@ -25,7 +28,6 @@ export default function RepoList() {
       e.stopPropagation();
 
       const target = e.target.id;
-      console.log(target);
       let leftData = repoData.filter((_, idx) => Number(target) !== idx);
 
       dispatch(deleteRepo(leftData));

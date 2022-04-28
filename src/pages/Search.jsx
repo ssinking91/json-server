@@ -10,8 +10,8 @@ import Pagination from "../components/Pagination";
 export default function Search() {
   const searchList = useSelector((state) => state.Search.searchList.list);
   const repoData = useSelector((state) => state.Search.repoData);
-  const isLoading = useSelector((state) => state.Search.searchList.isLoading);
 
+  // 로컬스토리지에 저장되어있는 객체배열
   const [isText, setIsText] = useState();
 
   useEffect(() => {
@@ -32,7 +32,12 @@ export default function Search() {
   const [numOfPages, setNumOfPages] = useState(0);
 
   useEffect(() => {
+    setCurrentPage(1);
+  }, [searchList]);
+
+  useEffect(() => {
     const len = searchList.length;
+
     // Number of Pages
     const pagesLength = Math.ceil(len / postsPerPage);
 
@@ -58,11 +63,7 @@ export default function Search() {
       <Header />
       <SearchContainer>
         {repoData && <AsideRepos />}
-        <PostSection
-          isText={isText}
-          CurrentData={CurrentData}
-          isLoading={isLoading}
-        />
+        <PostSection isText={isText} CurrentData={CurrentData} />
       </SearchContainer>
       {searchList.length > 0 && (
         <Pagination

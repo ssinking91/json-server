@@ -4,10 +4,10 @@ import PropTypes from "prop-types";
 
 import Posts from "./Posts";
 
-export default function PostSection({ isText, CurrentData, isLoading }) {
+export default function PostSection({ isText, CurrentData }) {
   return (
     <PostsWrapper>
-      <Posts isText={isText} CurrentData={CurrentData} isLoading={isLoading} />
+      <Posts isText={isText} CurrentData={CurrentData} />
     </PostsWrapper>
   );
 }
@@ -15,7 +15,6 @@ export default function PostSection({ isText, CurrentData, isLoading }) {
 PostSection.propTypes = {
   isText: PropTypes.array,
   CurrentData: PropTypes.array,
-  isLoading: PropTypes.bool,
 };
 
 const PostsWrapper = styled.div`

@@ -1,7 +1,7 @@
 import React, { useEffect, memo } from "react";
 import styled, { keyframes } from "styled-components";
-import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
+import PropTypes from "prop-types";
 
 //React.memo(): 컴포넌트의 props 가 바뀌지 않았다면, 리렌더링을 방지하여 컴포넌트의 리렌더링 성능 최적화
 function ToastModal({ content, alreadyModal }) {
